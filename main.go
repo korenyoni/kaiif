@@ -1,20 +1,20 @@
 package main
 
 import (
-	"strings"
-	"net/http"
 	"fmt"
+	"net/http"
+	"strings"
 
 	log "github.com/sirupsen/logrus"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path[1:]
-	if strings.HasSuffix(path,"/") {
-		path = strings.TrimSuffix(path,"/")
+	if strings.HasSuffix(path, "/") {
+		path = strings.TrimSuffix(path, "/")
 	}
 	_, err := AssetInfo(path)
-	pathIsFile := false 
+	pathIsFile := false
 	pathIsDir := false
 	var dirContents []string
 
@@ -37,12 +37,13 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		log.WithFields(log.Fields{
 			"path": r.URL.Path,
 		}).Info("got path request")
-		w.Write([]byte(fmt.Sprintf("%s",dirContents)))
+		w.Write([]byte(fmt.Sprintf("%s", dirContents)))
 	} else {
 		log.WithFields(log.Fields{
 			"path": r.URL.Path,
 		}).Info("404")
 		w.WriteHeader(404)
+		w.Write([]byte(fmt.Sprintf("404 Not found")))
 	}
 }
 
